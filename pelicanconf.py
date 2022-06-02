@@ -1,12 +1,9 @@
 AUTHOR = 'Aaron Zuspan'
-SITENAME = 'Longitudes and Platitudes'
-# SITEURL = 'https://aazuspan.github.io'
-SITEURL = ''
+SITENAME = 'Aaron Zuspan'
 
 
 TIMEZONE = 'America/Los_Angeles'
 
-DEFAULT_LANG = 'en'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -22,16 +19,15 @@ SOCIAL = (('twitter', 'https://twitter.com/aazuspan'),
 
 DEFAULT_PAGINATION = False
 
-# Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
-
 THEME = './theme/medius/'
 
-DEFAULT_DATE_FORMAT = "%b %d, %Y"                 # short date format, optional but recommended 
-USER_LOGO_URL = "http://i.imgur.com/zzCRZUH.jpg"  # change URL to point to desired logo for site
+TYPOGRIFY = True
 
-COLOR_SCHEME_CSS = 'darkly.css'
-HEADER_COLOR = 'red'
+DEFAULT_LANG = 'en'
+DEFAULT_DATE = "fs"
+DEFAULT_DATE_FORMAT = "%Y.%m.%d"
+DEFAULT_CATEGORY = "Other"
+SUMMARY_MAX_LENGTH = 40
 
 PATH = 'content'
 STATIC_PATHS = ['assets']
