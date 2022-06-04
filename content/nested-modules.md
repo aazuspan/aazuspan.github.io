@@ -4,18 +4,18 @@ Tags: earth-engine, modules, javascript, code-editor
 Authors: Aaron Zuspan
 Summary: Can you speed up Earth Engine module imports by simplifying your file structure?
 
-In a [recent blog post](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html), I found that shrinking an Earth Engine module's size by 75% had almost no effect on import speed in the Code Editor because most of the time was spent waiting for Earth Engine to access the module, not downloading its contents. That made me wonder, if each file requires some overhead time to import, can you speed up module imports by simplifying a module's file structure?
+In a [recent blog post](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html), I found that shrinking an Earth Engine module's size by 75% had almost no effect on import speed in the Code Editor because most of the time was spent waiting for Earth Engine to find it, not downloading its contents. That made me wonder, if each required file incurs some unavoidable overhead in import time, can you speed up module imports by simplifying a module's file structure? 
 
 ## Module Design
 
-When I'm building an Earth Engine module, I typically create one root file that imports from submodules. This allows for clean organization of code while only requiring users to make a single import. For example, I might have a file called `tools` with the following contents:
+When building an Earth Engine module, I usually make one root file that imports from submodules. That allows for organization of code while only requiring users to make a single import. For example, I might have a file called `tools` with the following contents:
 
 ```js
 exports.ui = require("users/aazuspan/repo:src/ui.js")
 exports.image = require("users/aazuspan/repo:src/image.js")
 ```
 
-The `ui` and `image` submodules would contain their own exported functions. A user could then import `tools` and access both submodules, like so:
+The `ui` and `image` submodules would contain their own exported functions. A user could import `tools` and access both submodules, like so:
 
 ```js
 var tools = require("users/aazuspan/repo:tools");
@@ -24,13 +24,17 @@ tools.image.maskClouds(...)
 tools.ui.legend(...)
 ```
 
-But when a user imports `tools`, three separate files must be requested from Earth Engine. If requests are made synchronously and each one has at least half a second of overhead, then nested modules like this may be inherently slow to import compared to just a single file containing all of the source code. To test whether I've been building unintentionally slow modules, I set up a variety of module designs to see how file structure affects import times.
+If you count the `require` calls above, you can see that Earth Engine is going to have to request three separate files in order to load `tools`. If each of those requests is made synchronously and has a minimum overhead time, imports might get painfully slow in complex projects. Would I be better off just including all my source code in a single file?
+
+<center><iframe src="https://giphy.com/embed/9jObH9PkVPTyM" width="480" height="271" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></center>
+
+To test whether I've been accidentally sabotaging my import times, I set up a variety of module designs to see how file structure affects import speed.
 
 ## The Test
 
-In my [previous experiment](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html) with module import times, I used Python to automate and time the imports. For this experiment, I stuck to the browser, tracking request times with the developer tools. My thought was that the Code Editor may have a strategy for optimizing imports, perhaps allowing it to speed up repeated requests to nearby modules or perform requests asynchronously. The lack of automation would make it harder to run repeated tests, but would ensure results were representative of actual import times experienced by other users.
+In my [previous experiment](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html) with module import times, I used Python to automate and time the imports. For this experiment, I stuck to the browser, tracking request times with the developer tools. I figured the Code Editor might be able to optimize imports, maybe caching requests to nearby modules or performing requests asynchronously. The lack of automation would make it harder to run repeated tests, but would ensure results were representative of actual import times experienced by users.
 
-I set up three different modules, each organized with a different layout, to compare the effect of different module structures on import times. To eliminate download time as a confounding variable, each module contained one function and exactly the same amount of data (395 bytes).
+I set up three different modules, each organized with a different layout, to compare the effect of different module structures on import times. To eliminate download time as a confounding variable, each module contained exactly 395 bytes of code.
 
 ### 1. Chained Structure
 
@@ -55,7 +59,7 @@ If each instance of `require` adds some overhead to import time, the fastest imp
 
 ### Chained is Slow
 
-Watching network traffic when importing the root file of the chained module revealed that six synchronous requests were made. Because each submodule contained the path to the next, the final submodule could only be imported after the paths had been retrieved from the previous four. You can see the timeline of requests, happening one after the other, below.
+Watching network traffic when importing the root file of the chained module revealed that six synchronous requests were made. Because each submodule contained the path to the next, the final submodule could only be imported after all the previous submodules were resolved. You can see that timeline of requests, happening one after the other, below.
 
 ![Browser developer tools showing 6 requests occuring one after the other](assets/nested_test_deep.png)
 
@@ -63,9 +67,9 @@ Averaged over 10 runs, it took **3.24 seconds** to fully import the chained modu
 
 ### Branched is Faster
 
-In comparison, the network traffic below shows how the branched module structure allowed for asynchronous requests. As soon as the submodule paths were retrieved from the root module, the remaining requests could be made simultaneously.
+In comparison, the network traffic below shows how the branched module structure allowed for asynchronous requests. As soon as the submodule paths were retrieved from the root module, the remaining requests were made simultaneously.
 
-![Browser developer tools showing 6 requests, with 5 occuring simultaneously after the first finishes](assets/nested_test_wide.png)
+![Browser developer tools showing 6 requests, with 5 occurring simultaneously after the first finishes](assets/nested_test_wide.png)
 
 On average, the branched module imported fully in **1.30 seconds**, almost 3 times faster than the chained module. 
 
@@ -75,30 +79,36 @@ Unsurprisingly, the single-file monolithic module made only one request, which w
 
 ![Browser developer tools showing a single request](assets/nested_test_allinone.png)
 
-The monolithic module took only **0.573 seconds** to import on average, about 18% and 44% of the time required by the chained and branched structures, respectively.
+The monolithic module took only **0.573 seconds** to import on average, about 6x faster than the chained module and 2x faster than the branched module.
 
-<iframe src="./assets/nested_module_imports.html" width=800 height=300 frameBorder="0"></iframe>
+### Scaling Up
+
+The results above painted a pretty clear picture, but I was curious whether things might change as the number of submodules changed. I reran the experiment, including between 1 and 10 submodules in each of the structures.
+
+<iframe src="./assets/nested_module_scale.html" width=800 height=400 frameBorder="0"></iframe>
+
+Import times for the chained module scaled linearly as more submodules were added, as expected. The branched module showed a smaller, but noticeable increase in import times as submodules increased. Apparently there was still *some* penalty for the additional imports, even when made asynchronously. The number of submodules had no effect on import speed of the monolithic module, as download times for the additional data were negligible compared to the overhead request time.
 
 ## Lessons Learned
 
-Using what I learned above, I decided to take a look at the structure of my [snazzy](https://github.com/aazuspan/snazzy) module that I created a few months ago. Here's the module layout:
+Using what I learned above, I decided to take a closer look at the structure of my Earth Engine modules called [snazzy](https://github.com/aazuspan/snazzy). Here's the module layout:
 
 <center><img src="./assets/snazzy_structure.svg" alt="A diagram showing three modules connected in a row"></img></center>
 
-In the interest of organization, I accidentally created a chained set of imports. The root `styles` must be imported first, which imports `styles.js`, which imports `tags.js`. A few tests revealed that the module takes **2.03 seconds** to import. 
+In the interest of organization, I accidentally created a chained set of imports. The root `styles` must be imported first, which imports `styles.js`, which imports `tags.js`. A few tests revealed that the module takes **2.03 seconds** to import, which matches the expected import time for a chained module with 2 submodules that I measured earlier. 
 
 I decided to simplify the structure to a single, monolithic module, moving all of the code into `styles.` The result was a **72% reduction** in import time, down to an average of only **0.551 seconds**.
 
 <center><img src="./assets/nested_modules_brain.jpg" alt="A meme of a brain expanding. Alongside, the caption goes from 'Putting all your code in one file because its easy', to 'Splitting your code up into submodules', to 'Building a complex network of nested sub-modules', to 'Realizing thats slow and putting all your code back in one file.'"></img></center>
 
-Do I plan to build all of my Earth Engine modules in a single file from now on? No. Being able to organize complex projects across multiple files dramatically improves maintainability, and that may be worth the cost in performance. However, I will pay closer attention to module structure, and avoid chained imports like I had in `snazzy` whenever possible. 
+So, will I build all of my Earth Engine modules in a single file from now on? Probably not. Being able to organize complex projects across multiple files dramatically improves maintainability, and that may be worth the cost in performance. However, I will pay closer attention to module structure, and avoid chained imports like I had in `snazzy` whenever possible. 
 
-Of course, compromising performance for organization or vice-versa isn't ideal, so maybe there's a third option. Specifically, I'm thinking that there's a need for a tool that could be set up to automatically merge nested submodules into a single root module. This step could be run through an automated Github workflow whenever new code is pushed, essentially compiling the project and pushing it to Earth Engine. That would allow for performant imports *and* clean, well-organized code. [Minification](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html) could even be run at the same time to speed up imports just a little bit more. 
+Of course, compromising performance for organization (or vice-versa) isn't great, so maybe there's a third option. Specifically, I'm thinking that there's a need for a tool that could be set up to automatically merge nested submodules into a single root module. This step could be run through an automated Github workflow whenever new code is pushed, essentially compiling the project and pushing it to Earth Engine. That would allow for performant imports *and* clean, well-organized code. [Minification](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html) could even be run at the same time to speed up imports just a little bit more. 
 
 But for the time being, I plan to just pay a little more attention to my module design.
 
 ## TLDR
-- Each file import in Earth Engine takes times, independent of file size
-- Chained imports (`A` requires `B` requires `C`) occur synchronously and are very slow
-- Branched imports (`A` requires `B` and `C`) occur asynchronously and are faster
-- Single file imports are the fastest possible, but make organization difficult
+- Each file import in Earth Engine takes times, regardless of file size
+- Chained imports (`A` requires `B` requires `C`) occur synchronously. Each import linearly increases the total import time.
+- Branched imports (`A` requires `B` *and* `C`) occur asynchronously. There isn't much difference between one and ten branched imports.
+- Single file imports are the fastest possible, but they can make organization difficult.
