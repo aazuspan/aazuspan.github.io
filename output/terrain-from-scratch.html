@@ -30,7 +30,7 @@
     <a href="/category/algorithms.html" class="category">Algorithms</a><br />
 
     <a class="author" href="/author/aaron-zuspan.html">Aaron Zuspan</a>
-    &mdash; <abbr title="2022-08-06T13:04:07.352648-07:00">2022.08.06</abbr>
+    &mdash; <abbr title="2022-08-06T13:12:07.476292-07:00">2022.08.06</abbr>
 </div>        </div>
     </div>
 
@@ -1173,14 +1173,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Elevation-Data">Elevation Data<a class="anchor-link" href="#Elevation-Data">&#182;</a></h1><p>Terrain algorithms won&#8217;t do much good without elevation data to apply them to, so the first thing we&#8217;ll do is to grab some of that. Specifically, we&#8217;ll download a digital elevation model (<span class="caps">DEM</span>) over Mount St. Helens from <a href="">Microsoft Planetary Computer</a>. Using <span class="caps">STAC</span> (via <a href="">pystac-client</a>) will allow us to quickly find the asset we need, and the <a href="">stackstac</a> package will make it easy to download and clip it into a 2D Numpy&nbsp;array.</p>
+<h1 id="Elevation-Data">Elevation Data<a class="anchor-link" href="#Elevation-Data">&#182;</a></h1><p>Terrain algorithms won&#8217;t do much good without elevation data to apply them to, so the first thing we&#8217;ll do is to grab some of that. Specifically, we&#8217;ll download a digital elevation model (<span class="caps">DEM</span>) over Mount St. Helens from <a href="https://planetarycomputer.microsoft.com/">Microsoft Planetary Computer</a>. Using <span class="caps">STAC</span> (via <a href="https://github.com/stac-utils/pystac-client">pystac-client</a>) will allow us to quickly find the asset we need, and the <a href="https://github.com/gjoseph92/stackstac">stackstac</a> package will make it easy to download and clip it into a 2D Numpy&nbsp;array.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pystac_client</span> <span class="kn">import</span> <span class="n">Client</span>
@@ -1218,7 +1218,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[4]:</div>
+    <div class="prompt output_prompt">Out[1]:</div>
 
 
 
@@ -1243,7 +1243,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -1264,13 +1264,13 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[133]:</div>
+    <div class="prompt output_prompt">Out[2]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.colorbar.Colorbar at 0x7fa149b1d4f0&gt;</pre>
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x7f7e7d125580&gt;</pre>
 </div>
 
 </div>
@@ -1297,7 +1297,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Slope">Slope<a class="anchor-link" href="#Slope">&#182;</a></h1><p>The concept of slope is simple: How much does elevation change within an area? Steep areas have lots of elevation change over a short distance while flat areas have very little. However, applying that concept to a 2D array raises the question, how do we define change within an&nbsp;area?</p>
-<p>There have been <em>many</em> different slope algorithms created to answer that question, and each produces slightly different results. We&#8217;re going to use the <a href="https://people.csail.mit.edu/bkph/papers/Hill-Shading.pdf">Horn 1981</a> algorithm since it is widely used (supported by <span class="caps">GDAL</span>, <span class="caps">GRASS</span>, WhiteBox Tools, <span class="caps">ESRI</span>, etc.) but if you want to dive into the rabbit hole of slope algorithm comparisons, check out <a href="https://www.usna.edu/Users/oceano/pguth/md_help/html/demb1f3n.htm">this site</a> or <a href="https://www.researchgate.net/publication/209803713_The_Effect_of_Slope_Algorithms_on_Slope_Estimates_within_a_GIS">this paper</a>.</p>
+<p>There have been <em>many</em> different slope algorithms created to answer that question, and each produces slightly different results. We&#8217;re going to use the <a href="https://people.csail.mit.edu/bkph/papers/Hill-Shading.pdf">Horn 1981</a> algorithm since it is widely used (supported by <span class="caps">GDAL</span>, <span class="caps">GRASS</span>, Whitebox Tools, <span class="caps">ESRI</span>, etc.) but if you want to dive into the rabbit hole of slope algorithm comparisons, check out <a href="https://www.usna.edu/Users/oceano/pguth/md_help/html/demb1f3n.htm">this site</a> or <a href="https://www.researchgate.net/publication/209803713_The_Effect_of_Slope_Algorithms_on_Slope_Estimates_within_a_GIS">this paper</a>.</p>
 <p>Horn&#8217;s algorithm calculates slope for each pixel using the following equation, where $\frac{dz}{dx}$ is the east-west gradient of neighboring pixels and $\frac{dz}{dy}$ is the north-south&nbsp;gradient.</p>
 $$
 slope _{percent} = \sqrt {\frac{dz}{dx}^2 + \frac{dz}{dy}^2}
@@ -1316,7 +1316,7 @@ $$<p>Let&#8217;s break that equation down by calculating the slope of a single&n
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1361,14 +1361,7 @@ $$<p>Let&#8217;s break that equation down by calculating the slope of a single&n
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="East-West-Gradient">East-West Gradient<a class="anchor-link" href="#East-West-Gradient">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The first term in the Horn algorithm, the east-west gradient $\frac{dz}{dx}$, describes how elevation changes between the east and west side of the pixel neighborhood. To solve it, we&#8217;ll break it down into the change in elevation $dz$ over the horizontal distance&nbsp;$dx$.</p>
+<h3 id="East-West-Gradient">East-West Gradient<a class="anchor-link" href="#East-West-Gradient">&#182;</a></h3><p>The first term in the Horn algorithm, the east-west gradient $\frac{dz}{dx}$, describes how elevation changes between the east and west side of the pixel neighborhood. To solve it, we&#8217;ll break it down into the change in elevation $dz$ over the horizontal distance&nbsp;$dx$.</p>
 <p>The vertical distance between pixels, $dz$, is calculated with the following equation, where the northwest pixel in the neighborhood is labeled $z_{nw}$, the southwest pixel is labeled $z_{sw}$, and so&nbsp;on.</p>
 $$
 dz = \frac{(z_{nw} + z_{sw} + 2z_{w}) - (z_{ne} + z_{se} + 2z_{e})}{8}
@@ -1385,7 +1378,7 @@ $$<p>There are a few things to notice in the equation&nbsp;above.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dz</span> <span class="o">=</span> <span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">8</span>
@@ -1406,7 +1399,7 @@ $$<p>There are a few things to notice in the equation&nbsp;above.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dx</span> <span class="o">=</span> <span class="mi">30</span>
@@ -1427,7 +1420,7 @@ $$<p>There are a few things to notice in the equation&nbsp;above.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dz_dx</span> <span class="o">=</span> <span class="n">dz</span> <span class="o">/</span> <span class="n">dx</span>
@@ -1441,14 +1434,7 @@ $$<p>There are a few things to notice in the equation&nbsp;above.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="North-South-Gradient">North-South Gradient<a class="anchor-link" href="#North-South-Gradient">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The second term in the Horn algorithm, the north-south gradient $\frac{dz}{dy}$, describes how elevation changes between the north and south side of the pixel neighborhood. It&#8217;s solution is nearly identical to the east-west gradient, after swapping in the appropriate&nbsp;pixels.</p>
+<h3 id="North-South-Gradient">North-South Gradient<a class="anchor-link" href="#North-South-Gradient">&#182;</a></h3><p>The second term in the Horn algorithm, the north-south gradient $\frac{dz}{dy}$, describes how elevation changes between the north and south side of the pixel neighborhood. It&#8217;s solution is nearly identical to the east-west gradient, after swapping in the appropriate&nbsp;pixels.</p>
 $$
 dz = \frac{(z_{sw} + z_{se} + 2z_{s}) + (z_{nw} + z_{ne} + 2z_{n})}{8}
 $$<p>And in&nbsp;code:</p>
@@ -1458,7 +1444,7 @@ $$<p>And in&nbsp;code:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[72]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dz</span> <span class="o">=</span> <span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">8</span>
@@ -1479,7 +1465,7 @@ $$<p>And in&nbsp;code:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dy</span> <span class="o">=</span> <span class="mi">30</span>
@@ -1500,7 +1486,7 @@ $$<p>And in&nbsp;code:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dz_dy</span> <span class="o">=</span> <span class="n">dz</span> <span class="o">/</span> <span class="n">dy</span>
@@ -1523,7 +1509,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">slope_pct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dz_dx</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">dz_dy</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
@@ -1546,7 +1532,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slope_pct</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
@@ -1563,7 +1549,7 @@ $$
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[76]:</div>
+    <div class="prompt output_prompt">Out[11]:</div>
 
 
 
@@ -1588,7 +1574,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pixel_slope</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
@@ -1610,7 +1596,7 @@ $$
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[77]:</div>
+    <div class="prompt output_prompt">Out[12]:</div>
 
 
 
@@ -1644,7 +1630,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">dem</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dem</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
@@ -1661,7 +1647,7 @@ $$
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[78]:</div>
+    <div class="prompt output_prompt">Out[13]:</div>
 
 
 
@@ -1686,7 +1672,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dem</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -1710,7 +1696,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -1728,13 +1714,13 @@ $$
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[134]:</div>
+    <div class="prompt output_prompt">Out[15]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.colorbar.Colorbar at 0x7fa149ec6b20&gt;</pre>
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x7f7e6f70d4f0&gt;</pre>
 </div>
 
 </div>
@@ -1771,7 +1757,7 @@ $$<p>The east-west and north-south gradients, $\frac{dz}{dx}$ and $\frac{dz}{dy}
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pixel_aspect</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
@@ -1798,7 +1784,7 @@ $$<p>The east-west and north-south gradients, $\frac{dz}{dx}$ and $\frac{dz}{dy}
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[81]:</div>
+    <div class="prompt output_prompt">Out[16]:</div>
 
 
 
@@ -1823,7 +1809,7 @@ $$<p>The east-west and north-south gradients, $\frac{dz}{dx}$ and $\frac{dz}{dy}
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">aspect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">dem</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dem</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
@@ -1848,13 +1834,13 @@ $$<p>The east-west and north-south gradients, $\frac{dz}{dx}$ and $\frac{dz}{dy}
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[135]:</div>
+    <div class="prompt output_prompt">Out[17]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.colorbar.Colorbar at 0x7fa1495fd850&gt;</pre>
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x7f7e6f650ac0&gt;</pre>
 </div>
 
 </div>
@@ -1898,7 +1884,7 @@ $$<p>Here&#8217;s that equation in code, using the slope and aspect arrays we ca
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[156]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">azimuth</span> <span class="o">=</span> <span class="mi">315</span>
@@ -1929,13 +1915,13 @@ $$<p>Here&#8217;s that equation in code, using the slope and aspect arrays we ca
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[156]:</div>
+    <div class="prompt output_prompt">Out[18]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7fa143ef5820&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f7e7d0339d0&gt;</pre>
 </div>
 
 </div>
@@ -1969,7 +1955,7 @@ $$<p>Here&#8217;s that equation in code, using the slope and aspect arrays we ca
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[155]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -1997,13 +1983,13 @@ $$<p>Here&#8217;s that equation in code, using the slope and aspect arrays we ca
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[155]:</div>
+    <div class="prompt output_prompt">Out[19]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.image.AxesImage at 0x7fa143fb0490&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7f7e6f560d90&gt;</pre>
 </div>
 
 </div>
