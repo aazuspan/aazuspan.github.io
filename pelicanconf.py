@@ -1,3 +1,6 @@
+from pelican_jupyter import markup as nb_markup
+
+
 AUTHOR = 'Aaron Zuspan'
 SITENAME = 'Aaron Zuspan'
 
@@ -20,6 +23,8 @@ SOCIAL = (('twitter', 'https://twitter.com/aazuspan'),
 DEFAULT_PAGINATION = False
 
 THEME = './theme/medius/'
+MEDIUS_CATEGORIES = []
+MEDIUS_AUTHORS = []
 
 TYPOGRIFY = True
 
@@ -33,3 +38,10 @@ PATH = 'content'
 STATIC_PATHS = ['assets']
 
 DELETE_OUTPUT_DIRECTORY = True
+
+MARKUP = ("md", "ipynb")
+IPYNB_MARKUP_USE_FIRST_CELL = True
+
+PLUGINS = [nb_markup]
+
+IGNORE_FILES = [".ipynb_checkpoints"]

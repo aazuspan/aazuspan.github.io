@@ -6,8 +6,12 @@ authors = ["Aaron Zuspan <aa.zuspan@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pelican = "^4.7.2"
+pelican = "^4"
 Markdown = "^3.3.6"
+ipykernel = "^6.15.1"
+pelican-jupyter = "^0.10.1"
+ipython_genutils = "^0.2.0"
+Jinja2 = "<=3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
