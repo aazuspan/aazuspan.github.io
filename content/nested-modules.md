@@ -2,7 +2,8 @@ Title: Optimizing Module Structure in Earth Engine
 Category: Earth Engine
 Tags: earth-engine, modules, javascript, code-editor
 Authors: Aaron Zuspan
-Summary: Can you speed up Earth Engine module imports by simplifying your file structure?
+Summary: Nested file structures are great for organization and terrible for import speed in Earth Engine modules. Let's figure out why and what we can do about it.
+Date: 2022-06-09
 
 In a [recent blog post](https://aazuspan.github.io/should-you-minify-your-earth-engine-modules.html), I found that shrinking an Earth Engine module's size by 75% had almost no effect on import speed in the Code Editor because most of the time was spent waiting for Earth Engine to find it, not downloading its contents. That made me wonder, if each required file incurs some unavoidable overhead in import time, can you speed up module imports by simplifying a module's file structure? 
 

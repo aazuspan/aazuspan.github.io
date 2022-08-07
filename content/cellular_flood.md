@@ -2,7 +2,8 @@ Title: Cellular Flood
 Category: Earth Engine
 Tags: earth-engine, cellular-automata, javascript
 Authors: Aaron Zuspan
-Summary: Let's build a cellular automaton in Earth Engine to run Conway's Game of Life.
+Summary: Let's simulate sea level rise with cellular automata in Earth Engine.
+Date: 2022-08-07
 
 I recently built [Conway's Game of Life in Earth Engine](https://aazuspan.github.io/cellular-automata-in-earth-engine.html). It was a fun experiment, but I felt like it ignored one of the coolest aspects of cellular automata in Earth Engine—easy access to petabytes of geospatial data. So I decided to build a cellular automaton that would use elevation data to roughly simulate changes in sea level.
 

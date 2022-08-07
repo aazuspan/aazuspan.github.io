@@ -2,7 +2,8 @@ Title: Cellular Automata in Earth Engine
 Category: Earth Engine
 Tags: earth-engine, cellular-automata, javascript, game-of-life
 Authors: Aaron Zuspan
-Summary: Let's build a cellular automaton in Earth Engine to run Conway's Game of Life.
+Summary: Conway's Game of Life is cool. Earth Engine is cool. What if we put them together?
+Date: 2022-07-16
 
 <center><img src="./assets/gol_5070.gif" alt="Conway's Game of Life in a weird circular projection"></img></center>
 
